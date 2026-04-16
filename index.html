@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Grammar Simplification Visualizer — step-by-step CFG transformation tool for automata theory." />
+  <title>Grammar Simplification Tool</title>
+
+  <!-- Google Fonts: Inter + JetBrains Mono + Playfair Display -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="style.css?v=6" />
+</head>
+<body>
+  <div id="app">
+
+    <!-- ╔══════════════════════════════════════════╗
+         ║  PREMIUM HEADER                          ║
+         ╚══════════════════════════════════════════╝ -->
+    <header class="topbar" id="topbar">
+      <div class="topbar__left">
+        <!-- Sigma Logo -->
+        <div class="topbar__logo" aria-label="Logo">
+          <span class="topbar__logo-symbol">Σ</span>
+        </div>
+        <div class="topbar__brand">
+          <span class="topbar__title">Grammar Simplification Tool</span>
+          <span class="topbar__tagline">Context-Free Grammar Transformer</span>
+        </div>
+      </div>
+
+      <div class="topbar__right">
+        <!-- Student Identity Pills -->
+        <span class="identity-pill identity-pill--purple">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          Aryan Bharadwaj
+        </span>
+        <span class="identity-pill identity-pill--amber">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+               stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+          </svg>
+          2024UCS1528
+        </span>
+
+        <!-- Separator -->
+        <div class="topbar__sep"></div>
+
+        <!-- Theme Toggle -->
+        <div class="theme-toggle" id="theme-toggle" role="radiogroup" aria-label="Theme">
+          <button class="theme-toggle__btn theme-toggle__btn--active" id="theme-dark" data-theme="dark" aria-pressed="true">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+            Dark
+          </button>
+          <button class="theme-toggle__btn" id="theme-light" data-theme="light" aria-pressed="false">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"/>
+              <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+              <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </svg>
+            Light
+          </button>
+        </div>
+
+        <!-- Separator -->
+        <div class="topbar__sep"></div>
+
+        <!-- Hamburger Menu -->
+        <div class="header-menu" id="header-menu">
+          <button class="header-menu__btn" id="btn-hamburger" aria-label="Menu" data-tooltip="Menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          <div class="header-menu__dropdown" id="header-dropdown">
+            <button class="header-menu__item" id="btn-practice-quiz">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+              Practice Quiz
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ╔══════════════════════════════════════════╗
+         ║  TOOLBAR                                 ║
+         ╚══════════════════════════════════════════╝ -->
+    <div class="toolbar" id="toolbar">
+      <div class="toolbar__left">
+        <div class="pill-dropdown" id="sample-dropdown">
+          <div class="pill-dropdown__header" id="sample-dropdown-header">
+            <svg class="pill-dropdown__icon" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            <span class="pill-dropdown__label">Load Sample...</span>
+            <svg class="pill-dropdown__chevron" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+          <div class="pill-dropdown__menu" id="sample-dropdown-menu">
+            <button class="pill-dropdown__item" data-sample="blank">Default/Blank</button>
+            <button class="pill-dropdown__item" data-sample="null-cascader">The Null Cascader</button>
+            <button class="pill-dropdown__item" data-sample="unit-loop">The Unit Loop</button>
+            <button class="pill-dropdown__item" data-sample="dead-end">The Dead End</button>
+          </div>
+        </div>
+      </div>
+      <div class="toolbar__right">
+        <button class="btn btn--ghost btn--sm" id="btn-clear" data-tooltip="Reset everything">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="1 4 1 10 7 10"/>
+            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+          </svg>
+          Clear
+        </button>
+        <button class="btn btn--primary btn--sm" id="btn-simplify" data-tooltip="Ctrl + Enter">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+          </svg>
+          Simplify
+        </button>
+      </div>
+    </div>
+
+    <!-- ╔══════════════════════════════════════════╗
+         ║  MAIN 3-PANE LAYOUT                      ║
+         ╚══════════════════════════════════════════╝ -->
+    <main class="main">
+
+      <!-- ── LEFT PANE: Grammar Input ── -->
+      <section class="panel panel--input" id="panel-input">
+        <div class="panel__header">
+          <div class="panel__title">
+            <svg class="panel__title-icon" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10 9 9 9 8 9"/>
+            </svg>
+            Grammar Input
+          </div>
+          <span class="badge badge--success" id="rule-count">0 rules</span>
+        </div>
+
+        <div class="panel__body">
+          <form class="grammar-form" id="grammar-form" onsubmit="return false">
+
+            <!-- Start Symbol -->
+            <div class="form-group">
+              <label class="form-label" for="start-symbol">Start Symbol</label>
+              <input
+                class="form-input mono"
+                type="text"
+                id="start-symbol"
+                maxlength="3"
+                placeholder="S"
+                value="S"
+              />
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Production Rules -->
+            <div class="rules-section">
+              <div class="rules-section__header">
+                <span class="form-label">Production Rules</span>
+                <button
+                  class="btn btn--ghost btn--sm"
+                  type="button"
+                  id="btn-add-rule"
+                  data-tooltip="Ctrl + Shift + N"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <line x1="12" y1="5" x2="12" y2="19"/>
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                  </svg>
+                  Add Rule
+                </button>
+              </div>
+
+              <div id="rules-container">
+                <!-- Dynamic rule rows injected here -->
+              </div>
+            </div>
+
+          </form>
+        </div>
+      </section>
+
+      <!-- ── CENTER PANE: Step-by-Step Playback ── -->
+      <section class="panel panel--steps" id="panel-steps">
+        <div class="panel__header">
+          <div class="panel__title">
+            <svg class="panel__title-icon" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="8" y1="6" x2="21" y2="6"/>
+              <line x1="8" y1="12" x2="21" y2="12"/>
+              <line x1="8" y1="18" x2="21" y2="18"/>
+              <line x1="3" y1="6" x2="3.01" y2="6"/>
+              <line x1="3" y1="12" x2="3.01" y2="12"/>
+              <line x1="3" y1="18" x2="3.01" y2="18"/>
+            </svg>
+            Transformation Steps
+          </div>
+          <span class="badge" id="step-counter">0 / 0</span>
+        </div>
+
+        <!-- ── Playback Control Bar ── -->
+        <div class="playback-bar" id="playback-bar">
+          <div class="playback-bar__controls">
+            <button class="playback-btn" id="btn-step-back" data-tooltip="Step Back" disabled>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="19 20 9 12 19 4 19 20"/>
+                <line x1="5" y1="19" x2="5" y2="5"/>
+              </svg>
+            </button>
+
+            <button class="playback-btn playback-btn--primary" id="btn-play" data-tooltip="Auto-Play" disabled>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                   id="play-icon">
+                <polygon points="5 3 19 12 5 21 5 3"/>
+              </svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                   id="pause-icon" style="display: none">
+                <rect x="6" y="4" width="4" height="16"/>
+                <rect x="14" y="4" width="4" height="16"/>
+              </svg>
+            </button>
+
+            <button class="playback-btn" id="btn-step-forward" data-tooltip="Step Forward" disabled>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="5 4 15 12 5 20 5 4"/>
+                <line x1="19" y1="5" x2="19" y2="19"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Progress bar -->
+          <div class="playback-bar__progress">
+            <div class="progress-track" id="progress-track">
+              <div class="progress-fill" id="progress-fill"></div>
+            </div>
+          </div>
+
+          <div class="playback-bar__meta">
+            <label class="speed-label" for="speed-select">Speed</label>
+            <select class="speed-select" id="speed-select">
+              <option value="2000">0.5×</option>
+              <option value="1200" selected>1×</option>
+              <option value="700">2×</option>
+              <option value="400">3×</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- ── Step Content Area ── -->
+        <div class="panel__body" id="steps-body">
+
+          <!-- Phase badge + Step title -->
+          <div class="step-display" id="step-display" style="display: none">
+            <div class="step-display__header">
+              <span class="badge" id="phase-badge">—</span>
+              <span class="step-display__phase" id="phase-title">—</span>
+            </div>
+
+            <!-- Description callout -->
+            <div class="description-box" id="description-box">
+              <div class="description-box__icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="12" y1="16" x2="12" y2="12"/>
+                  <line x1="12" y1="8" x2="12.01" y2="8"/>
+                </svg>
+              </div>
+              <p class="description-box__text" id="description-text">—</p>
+            </div>
+
+            <!-- Grammar display -->
+            <div class="grammar-display" id="grammar-display">
+              <!-- Individual rule lines rendered by JS -->
+            </div>
+
+            <!-- Highlighted rules (added / removed / identified) -->
+            <div class="step-card__highlights" id="highlights-container">
+              <!-- Highlight badges rendered by JS -->
+            </div>
+          </div>
+
+          <!-- Empty state (shown when no steps) -->
+          <div class="empty-state" id="empty-state">
+            <div class="empty-state__icon">⚙</div>
+            <div class="empty-state__title">No Simplification Yet</div>
+            <div class="empty-state__desc">
+              Add grammar rules in the left panel, then click
+              <strong>Simplify</strong> to see the step-by-step
+              transformation process.
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ── RIGHT PANE: Derivation Tree ── -->
+      <section class="panel panel--tree" id="panel-tree">
+        <div class="panel__header">
+          <div class="panel__title">
+            <svg class="panel__title-icon" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="5" r="3"/>
+              <line x1="12" y1="8" x2="12" y2="14"/>
+              <circle cx="6" cy="18" r="3"/>
+              <circle cx="18" cy="18" r="3"/>
+              <line x1="12" y1="14" x2="6" y2="15"/>
+              <line x1="12" y1="14" x2="18" y2="15"/>
+            </svg>
+            Derivation Tree
+          </div>
+        </div>
+
+        <div class="panel__body">
+          <svg class="tree-canvas" id="tree-canvas" xmlns="http://www.w3.org/2000/svg">
+            <!-- SVG tree content rendered by JS -->
+          </svg>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ╔══════════════════════════════════════════╗
+         ║  STATUS BAR                               ║
+         ╚══════════════════════════════════════════╝ -->
+    <footer class="statusbar">
+      <div class="statusbar__left">
+        <div class="statusbar__item">
+          <span class="statusbar__dot"></span>
+          <span id="status-text">Ready</span>
+        </div>
+      </div>
+      <div class="statusbar__right">
+        <div class="statusbar__item">Vanilla JS</div>
+        <div class="statusbar__item">Zero Dependencies</div>
+      </div>
+    </footer>
+
+  </div>
+
+    <!-- ╔══════════════════════════════════════════╗
+         ║  QUIZ MODAL                              ║
+         ╚══════════════════════════════════════════╝ -->
+    <div class="modal-overlay" id="quiz-modal">
+      <div class="modal">
+        <div class="modal__header">
+          <div class="modal__title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-warning)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+            Test Your Knowledge
+          </div>
+          <button class="modal__close" id="btn-close-quiz" aria-label="Close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <div class="modal__body">
+          <div class="quiz-grammar-box">
+            <div class="quiz-grammar-box__title">Current Grammar</div>
+            <div class="quiz-grammar" id="quiz-grammar-display">
+              S → AB | a<br>A → aA | ε<br>B → bB | ε
+            </div>
+          </div>
+          <p class="quiz-prompt" id="quiz-prompt">Identify the correct grammar after removing Null productions.</p>
+          <div class="quiz-options" id="quiz-options">
+            <button class="quiz-option">Option A</button>
+            <button class="quiz-option">Option B</button>
+            <button class="quiz-option">Option C</button>
+            <button class="quiz-option">Option D</button>
+          </div>
+          <div class="quiz-feedback" id="quiz-feedback" style="display: none;">
+            <!-- Feedback shown here -->
+          </div>
+        </div>
+        <div class="modal__footer">
+          <button class="btn btn--outline" id="btn-quiz-reset">Reset</button>
+          <button class="btn btn--primary" id="btn-quiz-next">Next Question</button>
+        </div>
+      </div>
+    </div>
+
+  <script src="script.js?v=6"></script>
+</body>
+</html>
